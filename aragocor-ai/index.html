@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aragocor Minerals — AI Sourcing Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ══ masthead ══════════════════════════════════════════════════ -->
+<header class="masthead">
+  <div class="brandmark">
+    <svg class="brandmark__glyph" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 2 L28 11 L23 29 L9 29 L4 11 Z" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M16 2 L16 29 M4 11 L28 11 M9 29 L16 11 L23 29" fill="none" stroke="currentColor" stroke-width="0.7" opacity=".55"/>
+    </svg>
+    <div class="brandmark__text">
+      <span class="brandmark__name">Aragocor Minerals</span>
+      <span class="brandmark__sub">AI sourcing desk</span>
+    </div>
+  </div>
+
+  <div class="masthead__tools">
+    <button class="status" id="statusPill" type="button" title="Open engine settings">
+      <span class="status__dot" id="statusDot"></span>
+      <span class="status__label" id="statusLabel">Offline engine</span>
+    </button>
+    <button class="ghost-btn" id="toggleWidgetView" type="button">Widget preview</button>
+  </div>
+</header>
+
+<!-- ══ deck ══════════════════════════════════════════════════════ -->
+<div class="deck">
+
+  <nav class="rail" aria-label="Sections">
+    <button class="rail__tab is-active" data-panel="chat" type="button"><span class="rail__key">01</span>Ask</button>
+    <button class="rail__tab" data-panel="catalog" type="button"><span class="rail__key">02</span>Catalog</button>
+    <button class="rail__tab" data-panel="freight" type="button"><span class="rail__key">03</span>Freight</button>
+    <button class="rail__tab" data-panel="rfq" type="button"><span class="rail__key">04</span>Requests<span class="rail__count" id="rfqCount"></span></button>
+    <button class="rail__tab" data-panel="embed" type="button"><span class="rail__key">05</span>Embed</button>
+    <button class="rail__tab" data-panel="settings" type="button"><span class="rail__key">06</span>Settings</button>
+  </nav>
+
+  <main class="stage">
+
+    <!-- ── 01 · ask ─────────────────────────────────────────────── -->
+    <section class="panel is-active" id="panel-chat">
+      <div class="thread" id="thread"></div>
+
+      <div class="composer">
+        <div class="composer__attachments" id="attachStrip" hidden></div>
+        <div class="composer__row">
+          <textarea id="prompt" rows="1" placeholder="Ask about grades, assays, mesh sizing, packaging, transit…" aria-label="Message"></textarea>
+          <div class="composer__actions">
+            <button class="icon-btn" id="attachBtn" type="button" title="Attach COA, lab sheet or photo" aria-label="Attach file">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13 6 6.8 12.2a2.4 2.4 0 0 0 3.4 3.4L16.5 9.3a4 4 0 0 0-5.7-5.7L4.6 9.9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <button class="icon-btn" id="micBtn" type="button" title="Dictate" aria-label="Dictate">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7.4" y="2.4" width="5.2" height="9.6" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4.6 9.4a5.4 5.4 0 0 0 10.8 0M10 15v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <button class="send-btn" id="sendBtn" type="button">Ask</button>
+          </div>
+        </div>
+        <input type="file" id="fileInput" multiple hidden
+               accept="image/*,application/pdf,.txt,.csv,.md">
+      </div>
+    </section>
+
+    <!-- ── 02 · catalog ─────────────────────────────────────────── -->
+    <section class="panel" id="panel-catalog">
+      <div class="panel__head">
+        <h2 class="panel__title">Mineral catalog</h2>
+        <p class="panel__note">Filter by name, application or chemical formula.</p>
+      </div>
+      <div class="filterbar">
+        <input type="search" id="catalogSearch" placeholder="quartz · refractory · BaSO₄ · 200 mesh" aria-label="Filter minerals">
+        <div class="chips" id="catalogChips"></div>
+      </div>
+      <div class="specimens" id="specimens"></div>
+      <p class="empty" id="catalogEmpty" hidden>No mineral matches that. Try a formula, an application, or clear the filter.</p>
+    </section>
+
+    <!-- ── 03 · freight ─────────────────────────────────────────── -->
+    <section class="panel" id="panel-freight">
+      <div class="panel__head">
+        <h2 class="panel__title">Freight &amp; stowage calculator</h2>
+        <p class="panel__note">Container counts, bag splits and indicative transit for a shipment.</p>
+      </div>
+
+      <div class="freight">
+        <form class="freight__form" id="freightForm" autocomplete="off">
+          <label class="field">
+            <span class="field__label">Tonnage (MT)</span>
+            <input type="number" id="fTonnage" value="500" min="1" step="1" required>
+          </label>
+          <label class="field">
+            <span class="field__label">Mineral</span>
+            <select id="fMineral"></select>
+          </label>
+          <label class="field">
+            <span class="field__label">Packaging</span>
+            <select id="fPack"></select>
+          </label>
+          <label class="field">
+            <span class="field__label">Load port</span>
+            <select id="fLoad"></select>
+          </label>
+          <label class="field">
+            <span class="field__label">Discharge port</span>
+            <select id="fPort"></select>
+          </label>
+          <div class="field field--actions">
+            <button class="solid-btn" type="submit">Calculate</button>
+          </div>
+        </form>
+
+        <div class="freight__out" id="freightOut">
+          <p class="empty">Enter a tonnage and calculate — the stowage plan appears here.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 04 · requests ────────────────────────────────────────── -->
+    <section class="panel" id="panel-rfq">
+      <div class="panel__head">
+        <h2 class="panel__title">Quotation requests</h2>
+        <p class="panel__note">Every request raised from this desk, with its tracking ID.</p>
+        <button class="solid-btn" id="newRfqBtn" type="button">New request</button>
+      </div>
+      <div class="rfq-list" id="rfqList"></div>
+    </section>
+
+    <!-- ── 05 · embed ───────────────────────────────────────────── -->
+    <section class="panel" id="panel-embed">
+      <div class="panel__head">
+        <h2 class="panel__title">Website widget</h2>
+        <p class="panel__note">Drop the desk onto aragocorminerals.com as a floating assistant.</p>
+      </div>
+      <div class="embed">
+        <ol class="embed__steps">
+          <li>Upload this whole folder to your web host, e.g. <code>https://aragocorminerals.com/ai/</code>.</li>
+          <li>Paste the snippet below before <code>&lt;/body&gt;</code> on every page.</li>
+          <li>The bubble loads bottom-right; the desk opens in a panel over the page.</li>
+        </ol>
+        <div class="codeblock">
+          <button class="copy-btn" data-copy="embedSnippet" type="button">Copy</button>
+          <pre id="embedSnippet"></pre>
+        </div>
+        <label class="field">
+          <span class="field__label">Host path</span>
+          <input type="text" id="embedHost" value="https://aragocorminerals.com/ai/">
+        </label>
+      </div>
+    </section>
+
+    <!-- ── 06 · settings ────────────────────────────────────────── -->
+    <section class="panel" id="panel-settings">
+      <div class="panel__head">
+        <h2 class="panel__title">Engine &amp; data</h2>
+        <p class="panel__note">The desk answers offline by default. Add a key for live model answers.</p>
+      </div>
+
+      <div class="settings">
+        <fieldset class="card">
+          <legend>Intelligence engine</legend>
+          <div class="radio-row">
+            <label><input type="radio" name="engine" value="offline"> <span>Offline · built-in mineral knowledge</span></label>
+            <label><input type="radio" name="engine" value="live"> <span>Live · Google Gemini</span></label>
+          </div>
+          <label class="field">
+            <span class="field__label">Gemini API key</span>
+            <input type="password" id="apiKey" placeholder="AIza…" autocomplete="off">
+            <span class="field__hint">Stored only in this browser. Never sent anywhere except Google's API.</span>
+          </label>
+          <label class="field">
+            <span class="field__label">Model</span>
+            <select id="apiModel">
+              <option value="gemini-2.5-flash">gemini-2.5-flash — fast, cheap</option>
+              <option value="gemini-2.5-pro">gemini-2.5-pro — deeper technical answers</option>
+            </select>
+          </label>
+          <div class="row-actions">
+            <button class="ghost-btn" id="testKeyBtn" type="button">Test key</button>
+            <span class="test-result" id="testResult"></span>
+          </div>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Lead capture</legend>
+          <p class="card__note">Where a quotation request goes the moment it is raised. Email handoff depends on the buyer pressing send in their own mail client — the other two do not.</p>
+          <label class="field">
+            <span class="field__label">Delivery</span>
+            <select id="leadMode">
+              <option value="email">Email handoff only — opens the buyer's mail client</option>
+              <option value="json">POST as JSON — Formspree, Getform, or your own endpoint</option>
+              <option value="netlify">Netlify Forms — form-encoded to the site root</option>
+            </select>
+          </label>
+          <label class="field" id="leadEndpointField">
+            <span class="field__label">Endpoint URL</span>
+            <input type="url" id="leadEndpoint" placeholder="https://formspree.io/f/xxxxxxxx" autocomplete="off">
+            <span class="field__hint" id="leadHint"></span>
+          </label>
+          <div class="row-actions">
+            <button class="ghost-btn" id="testEndpointBtn" type="button">Send a test request</button>
+            <span class="test-result" id="endpointResult"></span>
+          </div>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Reading aloud</legend>
+          <label class="check"><input type="checkbox" id="autoSpeak"> <span>Read every answer aloud</span></label>
+        </fieldset>
+
+        <fieldset class="card">
+          <legend>Data</legend>
+          <p class="card__note">Conversations and requests live in this browser only.</p>
+          <div class="row-actions">
+            <button class="ghost-btn" id="exportJson" type="button">Download backup</button>
+            <button class="ghost-btn" id="importJson" type="button">Restore backup</button>
+            <button class="ghost-btn" id="exportMd" type="button">Export chat as Markdown</button>
+            <button class="ghost-btn ghost-btn--warn" id="clearAll" type="button">Clear everything</button>
+          </div>
+          <input type="file" id="importFile" accept="application/json,.json" hidden>
+        </fieldset>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ══ rfq modal ═════════════════════════════════════════════════ -->
+<div class="scrim" id="rfqScrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="rfqHeading">
+    <header class="sheet__head">
+      <h2 id="rfqHeading">Request for quotation</h2>
+      <button class="icon-btn" id="rfqClose" type="button" aria-label="Close">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+    <form class="sheet__body" id="rfqForm" autocomplete="on">
+      <div class="grid2">
+        <label class="field"><span class="field__label">Your name</span><input id="rName" required></label>
+        <label class="field"><span class="field__label">Company</span><input id="rCompany" required></label>
+        <label class="field"><span class="field__label">Email</span><input id="rEmail" type="email" required></label>
+        <label class="field"><span class="field__label">Phone</span><input id="rPhone" type="tel"></label>
+        <label class="field"><span class="field__label">Mineral &amp; grade</span><select id="rMineral"></select></label>
+        <label class="field"><span class="field__label">Volume (MT)</span><input id="rVolume" type="number" min="1" step="1" required></label>
+        <label class="field"><span class="field__label">Mesh / particle size</span><input id="rMesh" placeholder="e.g. 200 mesh, D50 10 µm"></label>
+        <label class="field"><span class="field__label">Packaging</span><select id="rPack"></select></label>
+        <label class="field"><span class="field__label">Incoterms® 2020</span><select id="rIncoterm"></select></label>
+        <label class="field"><span class="field__label">Destination port</span><input id="rPort" list="portList" placeholder="Rotterdam"></label>
+      </div>
+      <label class="field"><span class="field__label">Specification notes</span><textarea id="rNotes" rows="4" placeholder="Chemical limits, moisture ceiling, shipment schedule, certification needed…"></textarea></label>
+      <datalist id="portList"></datalist>
+      <footer class="sheet__foot">
+        <span class="sheet__hint" id="rfqHint">Creates a tracking ID and opens an email to sales@aragocorminerals.com. You send it.</span>
+        <div>
+          <button class="ghost-btn" type="button" id="rfqCancel">Cancel</button>
+          <button class="solid-btn" type="submit">Raise request</button>
+        </div>
+      </footer>
+    </form>
+  </div>
+</div>
+
+<!-- ══ widget preview ════════════════════════════════════════════ -->
+<button class="bubble" id="bubble" type="button" aria-label="Open the sourcing desk" hidden>
+  <svg viewBox="0 0 32 32" aria-hidden="true">
+    <path d="M16 3 L27 11 L22.5 27 L9.5 27 L5 11 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+  </svg>
+</button>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="js/storage.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/calculator.js"></script>
+<script src="js/api.js"></script>
+<script src="js/rfq.js"></script>
+<script src="js/widget.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

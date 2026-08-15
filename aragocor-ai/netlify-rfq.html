@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Aragocor RFQ form registration</title>
+</head>
+<body>
+
+<!--
+  Netlify only registers forms it can find in static HTML at deploy time.
+  The desk posts with JavaScript, so this page exists purely to declare the
+  field list. Deploy it; nobody needs to visit it.
+
+  The name below must match FORM_NAME in js/rfq.js.
+  Delete this file if you are using the JSON endpoint mode instead.
+-->
+
+<form name="aragocor-rfq" netlify netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="aragocor-rfq">
+  <input name="bot-field">
+  <input name="trackingId">
+  <input name="raisedAt">
+  <input name="source">
+  <input name="page">
+  <input name="name">
+  <input name="company">
+  <input type="email" name="email">
+  <input name="phone">
+  <input name="mineral">
+  <input name="grade">
+  <input name="volumeMT">
+  <input name="particleSize">
+  <input name="packing">
+  <input name="incoterm">
+  <input name="destinationPort">
+  <textarea name="notes"></textarea>
+</form>
+
+<p style="font:14px system-ui;color:#4c5a66;max-width:34em;margin:3em auto">
+  This page registers the quotation-request form with Netlify. Requests arrive
+  under <strong>Forms → aragocor-rfq</strong> in the site dashboard. Add a
+  notification there so new requests land in the sales inbox.
+</p>
+
+</body>
+</html>
