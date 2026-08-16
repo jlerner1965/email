@@ -36,25 +36,59 @@ src/
 ├── lib/
 │   ├── grade.ts               # Specification → TailoredGrade (pure, tested)
 │   ├── validation.ts          # Lead form rules (pure, tested)
-│   └── payload.ts             # Submit shape, mirrors ../js/rfq.js payload()
+│   ├── payload.ts             # Submit shape, mirrors ../js/rfq.js payload()
+│   └── dispatch.ts            # Lead delivery: save-first queue, POST, retry
 └── types.ts                   # Shared vocabulary
 ```
+
+## Lead capture
+
+Set the endpoint in `.env` (see `.env.example`) and `App.tsx` wires it up:
+
+```bash
+VITE_RFQ_ENDPOINT=https://formspree.io/f/xxxxxxxx   # or your own handler
+VITE_RFQ_MODE=json                                  # json | netlify
+```
+
+Delivery order matches the sourcing desk deliberately:
+
+1. The request is written to local storage with `status: pending`.
+2. It POSTs to the endpoint.
+3. It is marked `sent` or `failed`.
+
+Because step 1 happens first, a dead network or a closed tab cannot lose a
+lead. Anything still pending or failed is retried on the next page load, up
+to five attempts. A rejected submit surfaces the endpoint's own error text
+in the form's retryable banner, along with the tracking ID the request is
+saved under.
+
+- **JSON mode** — POSTs the payload (plus a Formspree `_subject`) as JSON.
+  Works with Formspree, Getform, or any handler that returns CORS headers.
+- **Netlify mode** — form-encoded POST to the site root. Deploy
+  `netlify-sample.html` with the site so Netlify registers the
+  `aragocor-sample-kit` field list at build time.
+
+With no endpoint configured the widget simulates dispatch, so the page stays
+demoable with no backend.
 
 ## Dropping it into a page
 
 ```tsx
 import { MineralSelector } from './MineralSelector';
+import { createDispatcher } from './lib/dispatch';
+
+const dispatcher = createDispatcher({ endpoint: 'https://formspree.io/f/yourid' });
 
 <MineralSelector
-  onSubmit={(payload) => post('https://formspree.io/f/yourid', payload)}
+  onSubmit={dispatcher.submit}
   onStepChange={(index, id) => analytics.track('selector_step', { index, id })}
   defaultIndustry="glass"   // optional: skip step 1
 />
 ```
 
 `onSubmit` may throw / reject — the form shows a retryable error banner and
-keeps the draft. Without an `onSubmit` the widget simulates dispatch so the
-flow is demoable with no backend. The payload's key set matches
+keeps the draft. Call `dispatcher.flushQueue()` once on mount to re-send
+anything a previous session left behind. The payload's key set matches
 `RFQ.payload()` in `../js/rfq.js`, so the existing Formspree / Netlify /
 own-handler pipeline accepts it unchanged.
 

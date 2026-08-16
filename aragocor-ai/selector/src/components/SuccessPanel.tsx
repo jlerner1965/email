@@ -4,6 +4,7 @@
  * tell them exactly what was dispatched, where it went and what the
  * tracking reference is, so nobody has to email the desk to ask. */
 
+import { useEffect, useRef } from 'react';
 import type { SampleRequestPayload, TailoredGrade } from '../types';
 import { CheckIcon } from './Icons';
 
@@ -14,6 +15,14 @@ interface SuccessPanelProps {
 }
 
 export function SuccessPanel({ payload, grade, onReset }: SuccessPanelProps) {
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+
+  // This view only ever mounts off the back of a submit, so moving
+  // focus here is announcing the outcome, not stealing anything.
+  useEffect(() => {
+    headingRef.current?.focus({ preventScroll: true });
+  }, []);
+
   const dispatched = [
     `Technical data sheet for ${grade.code}, with the full assay range`,
     'Certificate of Analysis from the current production lot',
@@ -32,7 +41,11 @@ export function SuccessPanel({ payload, grade, onReset }: SuccessPanelProps) {
             <CheckIcon className="size-7" />
           </span>
 
-          <h2 className="font-serif text-2xl leading-tight font-semibold text-ink-900">
+          <h2
+            ref={headingRef}
+            tabIndex={-1}
+            className="font-serif text-2xl leading-tight font-semibold text-ink-900 outline-none"
+          >
             Your sample kit is on its way
           </h2>
 
