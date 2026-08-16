@@ -85,6 +85,10 @@ saved under.
 With no endpoint configured the widget simulates dispatch, so the page stays
 demoable with no backend.
 
+Spam: the form carries an off-screen honeypot. A filled trap ships as
+Formspree's `_gotcha` (JSON mode) or Netlify's `bot-field`, and the endpoint
+discards the submission silently — no friction for real buyers.
+
 ## Dropping it into a page
 
 ```tsx

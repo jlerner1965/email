@@ -142,13 +142,23 @@ export function encodeBody(
   mode: DispatchMode,
   formName: string,
 ): { body: string; contentType: string } {
+  // The honeypot ships under the endpoint's own spam-discard field,
+  // never under its internal name. Records queued before the honeypot
+  // existed lack the key — treat them as human.
+  const { honeypot = '', ...wire } = payload as SampleRequestPayload & { honeypot?: string };
+
   if (mode === 'netlify') {
-    const flat = flatten(payload);
+    const flat = flatten(wire as SampleRequestPayload);
     flat['form-name'] = formName;
+    flat['bot-field'] = honeypot;
     return { body: urlencode(flat), contentType: 'application/x-www-form-urlencoded' };
   }
   return {
-    body: JSON.stringify({ ...payload, _subject: subjectFor(payload) }),
+    body: JSON.stringify({
+      ...wire,
+      _subject: subjectFor(payload),
+      ...(honeypot ? { _gotcha: honeypot } : {}),
+    }),
     contentType: 'application/json',
   };
 }
