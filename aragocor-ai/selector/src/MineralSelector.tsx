@@ -313,7 +313,7 @@ export function MineralSelector({
                 direction={direction}
                 eyebrow="Step 3 of 3 · Tailored grade"
                 title="Your grade, and the sample kit that proves it"
-                lede="Generated from your selections against current production ranges. Request the kit and the full packet lands in your inbox."
+                lede="Generated from your selections against current production ranges. Request the kit and a technical sales engineer sends your full packet within one business day."
                 footer={
                   <button
                     type="button"
