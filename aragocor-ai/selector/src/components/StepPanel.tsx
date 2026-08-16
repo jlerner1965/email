@@ -47,7 +47,7 @@ export function StepPanel({
   return (
     <div className={direction === 'forward' ? 'step-enter-forward' : 'step-enter-back'}>
       <header className="mb-6">
-        <p className="mb-2 font-mono text-[11px] font-medium tracking-[0.18em] text-fluor-600 uppercase">
+        <p className="mb-2 font-mono text-[11px] font-medium tracking-[0.18em] text-ink-600 uppercase">
           {eyebrow}
         </p>
         <h2

@@ -54,9 +54,9 @@ export function ProcessStep({
             return (
               <label
                 key={process.id}
-                className={`group flex cursor-pointer gap-3 rounded-md border p-3.5 transition-colors duration-200 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-fluor-600 ${
+                className={`group flex cursor-pointer gap-3 rounded border p-3.5 transition-colors duration-200 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink-900 ${
                   isSelected
-                    ? 'border-fluor-600 bg-fluor-100/60'
+                    ? 'border-ink-900 bg-sand/30'
                     : 'border-ink-200 bg-white hover:border-ink-600'
                 }`}
               >
@@ -71,12 +71,12 @@ export function ProcessStep({
                 <span
                   aria-hidden="true"
                   className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border transition-colors duration-200 ${
-                    isSelected ? 'border-fluor-600' : 'border-ink-300 group-hover:border-ink-600'
+                    isSelected ? 'border-ink-900' : 'border-ink-300 group-hover:border-ink-600'
                   }`}
                 >
                   <span
                     className={`size-2 rounded-full transition-transform duration-200 ${
-                      isSelected ? 'scale-100 bg-fluor-600' : 'scale-0 bg-transparent'
+                      isSelected ? 'scale-100 bg-ink-900' : 'scale-0 bg-transparent'
                     }`}
                   />
                 </span>
@@ -133,7 +133,7 @@ export function ProcessStep({
           value={notes}
           onChange={(event) => onNotesChange(event.target.value)}
           placeholder="e.g. 500 MT/month, Fe₂O₃ under 0.04%, 1.0 MT lined FIBC, CIF Rotterdam."
-          className="w-full resize-y rounded-md border border-ink-200 bg-white px-3.5 py-2.5 text-sm leading-relaxed text-ink-900 transition-colors duration-200 placeholder:text-ink-300 focus:border-fluor-600 focus:outline-2 focus:outline-offset-0 focus:outline-fluor-600"
+          className="w-full resize-y rounded border border-ink-200 bg-white px-3.5 py-2.5 text-sm leading-relaxed text-ink-900 transition-colors duration-200 placeholder:text-ink-300 focus:border-ink-900 focus:outline-2 focus:outline-offset-0 focus:outline-ink-900"
         />
         <p
           className={`mt-1.5 text-right font-mono text-[11px] tnum ${

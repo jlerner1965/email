@@ -13,7 +13,7 @@ import type { Industry, IndustryId, MeshOption, MeshSize, ProcessOption } from '
 
 /** Base mineral. Aragonite, not calcite — hence orthorhombic. */
 export const MINERAL = {
-  name: 'Aragonite',
+  name: 'Oolitic Aragonite',
   formula: 'CaCO₃',
   crystalStructure: 'Orthorhombic',
   spaceGroup: 'Pmcn',

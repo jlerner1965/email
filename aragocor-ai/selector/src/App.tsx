@@ -42,19 +42,22 @@ export default function App() {
   }, [pipeline]);
 
   return (
-    <main className="min-h-screen bg-silica">
+    <main className="min-h-screen bg-bone">
       {/* Section intro, as it would appear mid-landing-page. */}
       <section className="px-5 pt-14 pb-6 sm:pt-20">
         <div className="mx-auto max-w-5xl text-center">
-          <p className="mb-3 font-mono text-[11px] font-medium tracking-[0.2em] text-fluor-600 uppercase">
-            Technical grade selector
+          <p className="mb-3 font-mono text-xs font-medium tracking-[0.14em] text-ink-600 uppercase">
+            Aragocor Minerals · Technical grade selector
           </p>
-          <h1 className="mx-auto max-w-3xl font-serif text-3xl leading-tight font-semibold text-ink-900 sm:text-4xl">
-            Specify the exact aragonite grade your process needs
+          <h1 className="mx-auto max-w-3xl font-serif text-4xl leading-[1.06] font-semibold tracking-[-0.02em] text-ink-900 sm:text-5xl">
+            Oolitic aragonite,
+            <br />
+            sized to your process.
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-ink-500">
+          <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-ink-600">
             Three questions, one tailored specification, and a verified sample kit on your desk.
-            96–98% CaCO₃, orthorhombic aragonite, ground and screened to U.S. mesh.
+            96–98% CaCO₃ from Bahamian deposits — ocean-formed, orthorhombic, screened to U.S.
+            mesh.
           </p>
         </div>
       </section>
@@ -68,8 +71,8 @@ export default function App() {
           }}
         />
 
-        <p className="mx-auto mt-6 max-w-5xl text-center font-mono text-[11px] tracking-wide text-ink-400">
-          ISO 9001 quality system · OMRI Listed grades · COA with every shipment
+        <p className="mx-auto mt-6 max-w-5xl text-center font-mono text-[11px] tracking-[0.08em] text-ink-500 uppercase">
+          Bahamas-born · Ocean-formed · Industry-trusted
         </p>
       </section>
     </main>

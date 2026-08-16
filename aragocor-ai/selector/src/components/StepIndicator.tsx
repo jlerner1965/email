@@ -32,7 +32,7 @@ export function StepIndicator({ steps, current, furthest, onSelect }: StepIndica
               <span
                 aria-hidden="true"
                 className={`h-px w-4 shrink-0 transition-colors duration-300 sm:w-8 ${
-                  isComplete || isCurrent ? 'bg-fluor-300' : 'bg-ink-600'
+                  isComplete || isCurrent ? 'bg-sand/70' : 'bg-bone/20'
                 }`}
               />
             )}
@@ -41,24 +41,24 @@ export function StepIndicator({ steps, current, furthest, onSelect }: StepIndica
               disabled={!canVisit}
               onClick={() => canVisit && onSelect(index)}
               aria-current={isCurrent ? 'step' : undefined}
-              className={`group flex items-center gap-2 rounded-full py-1 pr-1 pl-1 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fluor-300 sm:pr-3 ${
+              className={`group flex items-center gap-2 rounded-full py-1 pr-1 pl-1 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sand sm:pr-3 ${
                 canVisit ? 'cursor-pointer hover:bg-ink-800' : 'cursor-default'
               }`}
             >
               <span
                 className={`flex size-6 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors duration-300 tnum ${
                   isComplete
-                    ? 'border-malachite-600 bg-malachite-600 text-white'
+                    ? 'border-sand bg-sand text-ink-900'
                     : isCurrent
-                      ? 'border-fluor-300 bg-fluor-600 text-white'
-                      : 'border-ink-600 bg-transparent text-ink-400'
+                      ? 'border-bone bg-bone text-ink-900'
+                      : 'border-bone/30 bg-transparent text-bone/50'
                 }`}
               >
                 {isComplete ? <CheckIcon className="size-3.5" /> : index + 1}
               </span>
               <span
                 className={`hidden text-xs font-medium tracking-wide transition-colors duration-300 sm:inline ${
-                  isCurrent ? 'text-ink-50' : isComplete ? 'text-ink-300' : 'text-ink-400'
+                  isCurrent ? 'text-bone' : isComplete ? 'text-bone/70' : 'text-bone/40'
                 }`}
               >
                 {step.label}
