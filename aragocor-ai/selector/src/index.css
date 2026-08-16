@@ -2,52 +2,54 @@
 
 /* ═══════════════════════════════════════════════════════════════
    Aragocor Minerals — technical grade selector.
-   Visual system inherited from the sourcing desk: ink navy on
-   silica grey, fluorite violet for anything actionable, malachite
-   for confirmed. Hairlines, tabular figures, no gradients.
+   Visual system from the aragocorminerals.com design system:
+   ocean ink on bone, sand for warmth and selection, leaf for
+   confirmed. Source Serif 4 headings, Geist body, JetBrains Mono
+   for labels and data. Hairline top-rules, ink-tinted shadows,
+   the ease-tide motion curve.
    ═══════════════════════════════════════════════════════════════ */
 
 @theme {
-  /* Ink — the dark slate/navy spine of the widget. */
-  --color-ink-950: #070d15;
-  --color-ink-900: #0e1823;
-  --color-ink-800: #16212b;
-  --color-ink-700: #223140;
-  --color-ink-600: #33475a;
-  --color-ink-500: #4c5a66;
-  --color-ink-400: #7d8a93;
-  --color-ink-300: #a8b3bb;
-  --color-ink-200: #c9cfc6;
-  --color-ink-100: #dde1d8;
-  --color-ink-50: #f7f8f5;
+  /* Ink — ocean teal-navy ramp. 900 is the brand --ink; 600 is
+     --tide (fg-2); 400 is --fg-3; 300/200 are the border pair;
+     50 is bone. 800 is the lifted ink from the site's dark radial
+     panels (#294C57). */
+  --color-ink-950: #0a2831;
+  --color-ink-900: #0e3540;
+  --color-ink-800: #294c57;
+  --color-ink-700: #3a5a64;
+  --color-ink-600: #526a70;
+  --color-ink-500: #6a828a;
+  --color-ink-400: #8a9aa0;
+  --color-ink-300: #a9b0ac;
+  --color-ink-200: #c7cbc6;
+  --color-ink-100: #e3e2d9;
+  --color-ink-50: #f7f4ed;
 
-  --color-silica: #e5e8e2;
+  /* Brand surfaces & accents. */
+  --color-bone: #f7f4ed;
+  --color-sand: #d7c59c;
 
-  /* Fluorite violet — selection, focus, primary action. */
-  --color-fluor-700: #4a3075;
-  --color-fluor-600: #5c3d91;
-  --color-fluor-500: #6d4bab;
-  --color-fluor-300: #b8a4dc;
-  --color-fluor-100: #ede8f6;
+  /* Leaf — confirmed, compliant, positive. */
+  --color-leaf-700: #3a4e30;
+  --color-leaf-600: #49613c;
+  --color-leaf-100: #e9ece0;
 
-  /* Malachite — confirmed, compliant, dispatched. */
-  --color-malachite-700: #14513f;
-  --color-malachite-600: #1b6b58;
-  --color-malachite-100: #e2f0ea;
-
-  /* Assay accents. */
+  /* Cautions. Warm enough to sit with the sand family. */
   --color-barite-600: #96741f;
   --color-hematite-600: #9d3126;
   --color-hematite-100: #f7e6e3;
 
-  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-serif: 'IBM Plex Serif', ui-serif, Georgia, serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  --ease-tide: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Step choreography. Each panel enters from the side it travelled
-   from, so forward and back read as different movements rather than
-   the same fade twice. */
+   from, on the site's ease-tide curve, so forward and back read as
+   different movements rather than the same fade twice. */
 @keyframes step-enter-forward {
   from {
     opacity: 0;
@@ -73,7 +75,7 @@
 @keyframes panel-rise {
   from {
     opacity: 0;
-    transform: translate3d(0, 0.75rem, 0);
+    transform: translate3d(0, 10px, 0);
   }
   to {
     opacity: 1;
@@ -96,25 +98,25 @@
 }
 
 @utility step-enter-forward {
-  animation: step-enter-forward 340ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: step-enter-forward 380ms var(--ease-tide) both;
 }
 
 @utility step-enter-back {
-  animation: step-enter-back 340ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: step-enter-back 380ms var(--ease-tide) both;
 }
 
 @utility panel-rise {
-  animation: panel-rise 420ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: panel-rise 600ms var(--ease-tide) both;
 }
 
 @utility seal-in {
-  animation: seal-in 460ms cubic-bezier(0.34, 1.3, 0.64, 1) both;
+  animation: seal-in 480ms var(--ease-tide) both;
 }
 
 body {
   margin: 0;
-  background: var(--color-silica);
-  color: var(--color-ink-800);
+  background: var(--color-bone);
+  color: var(--color-ink-900);
   font-family: var(--font-sans);
   font-feature-settings: 'tnum' 1;
   -webkit-font-smoothing: antialiased;
@@ -124,6 +126,11 @@ body {
    number — assay tables, mesh chips, micron equivalents. */
 .tnum {
   font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--color-ink-900);
+  color: var(--color-bone);
 }
 
 @media (prefers-reduced-motion: reduce) {

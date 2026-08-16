@@ -40,8 +40,8 @@ export function SuccessPanel({ payload, grade, onReset }: SuccessPanelProps) {
     <div className="step-enter-forward">
       <div className="overflow-hidden rounded-lg border border-ink-200 bg-white">
         {/* ── the seal ──────────────────────────────────────── */}
-        <div className="border-b border-ink-100 bg-malachite-100 px-6 py-8 text-center sm:px-10">
-          <span className="seal-in mx-auto mb-5 flex size-14 items-center justify-center rounded-full bg-malachite-600 text-white">
+        <div className="border-b border-ink-200 bg-[#D7C59C] bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.5),transparent_40%)] px-6 py-8 text-center sm:px-10">
+          <span className="seal-in mx-auto mb-5 flex size-14 items-center justify-center rounded-full bg-leaf-600 text-bone">
             <CheckIcon className="size-7" />
           </span>
 
@@ -61,8 +61,8 @@ export function SuccessPanel({ payload, grade, onReset }: SuccessPanelProps) {
             day.
           </p>
 
-          <p className="mt-5 inline-flex items-center gap-2 rounded border border-malachite-600/30 bg-white px-3 py-1.5 font-mono text-[13px] font-medium text-malachite-700 tnum">
-            <span className="text-[10px] tracking-[0.14em] text-ink-400 uppercase">Reference</span>
+          <p className="mt-5 inline-flex items-center gap-2 rounded border border-ink-900/20 bg-white px-3 py-1.5 font-mono text-[13px] font-medium text-ink-900 tnum">
+            <span className="text-[10px] tracking-[0.14em] text-ink-600 uppercase">Reference</span>
             {payload.trackingId}
           </p>
         </div>
@@ -76,7 +76,7 @@ export function SuccessPanel({ payload, grade, onReset }: SuccessPanelProps) {
             <ul className="space-y-2.5">
               {packetContents.map((item) => (
                 <li key={item} className="flex items-start gap-2.5 text-[13px] leading-snug text-ink-600">
-                  <CheckIcon className="mt-0.5 size-3.5 shrink-0 text-malachite-600" />
+                  <CheckIcon className="mt-0.5 size-3.5 shrink-0 text-leaf-600" />
                   {item}
                 </li>
               ))}
@@ -123,7 +123,7 @@ export function SuccessPanel({ payload, grade, onReset }: SuccessPanelProps) {
           <button
             type="button"
             onClick={onReset}
-            className="shrink-0 rounded-md border border-ink-300 bg-white px-4 py-2.5 text-[13px] font-semibold text-ink-800 transition-colors duration-200 hover:border-ink-600 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fluor-600"
+            className="shrink-0 rounded border border-ink-300 bg-white px-4 py-2.5 text-[13px] font-semibold text-ink-800 transition-colors duration-200 hover:border-ink-600 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
           >
             Specify another grade
           </button>

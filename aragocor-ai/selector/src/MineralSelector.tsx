@@ -69,7 +69,7 @@ export function MineralSelector({
   onStepChange,
   defaultIndustry,
   className = '',
-  eyebrow = 'Aragonite · CaCO₃',
+  eyebrow = 'Oolitic Aragonite · CaCO₃',
 }: MineralSelectorProps) {
   const seedIndustry = defaultIndustry ? findIndustry(defaultIndustry) : undefined;
 
@@ -221,12 +221,12 @@ export function MineralSelector({
   return (
     <div
       ref={rootRef}
-      className={`mx-auto w-full max-w-5xl scroll-mt-6 overflow-hidden rounded-xl border border-ink-200 bg-ink-50 shadow-[0_30px_80px_-50px_rgba(7,13,21,0.55)] ${className}`}
+      className={`mx-auto w-full max-w-5xl scroll-mt-6 overflow-hidden rounded-lg border border-ink-200 bg-white shadow-[0_12px_32px_rgba(14,53,64,0.14),0_24px_64px_rgba(14,53,64,0.12)] ${className}`}
     >
       {/* ── masthead ────────────────────────────────────────── */}
       <header className="flex flex-wrap items-center justify-between gap-4 bg-ink-900 px-5 py-4 sm:px-7">
         <div className="flex items-baseline gap-3">
-          <span className="font-serif text-[15px] font-semibold tracking-tight text-white">
+          <span className="font-serif text-[15px] font-semibold tracking-tight text-bone">
             Aragocor Minerals
           </span>
           <span className="hidden font-mono text-[11px] tracking-[0.14em] text-ink-400 uppercase sm:inline">
@@ -273,14 +273,14 @@ export function MineralSelector({
                     <button
                       type="button"
                       onClick={() => goTo(0)}
-                      className="rounded-md border border-ink-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-ink-700 transition-colors duration-200 hover:border-ink-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fluor-600"
+                      className="rounded border border-ink-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-ink-700 transition-colors duration-200 hover:border-ink-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
                     >
                       Change industry
                     </button>
                     <button
                       type="button"
                       onClick={handleContinueToPreview}
-                      className="group inline-flex items-center justify-center gap-2 rounded-md bg-ink-900 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fluor-600"
+                      className="group inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-ink-900 px-7 text-[15px] font-medium text-bone transition-colors duration-200 hover:bg-ink-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
                     >
                       Generate technical preview
                       <span
@@ -318,7 +318,7 @@ export function MineralSelector({
                   <button
                     type="button"
                     onClick={() => goTo(1)}
-                    className="rounded-md border border-ink-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-ink-700 transition-colors duration-200 hover:border-ink-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fluor-600"
+                    className="rounded border border-ink-200 bg-white px-4 py-2.5 text-[13px] font-semibold text-ink-700 transition-colors duration-200 hover:border-ink-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900"
                   >
                     Adjust process or sizing
                   </button>

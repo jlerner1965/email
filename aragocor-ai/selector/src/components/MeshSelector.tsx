@@ -86,9 +86,9 @@ export function MeshSelector({ options, value, onChange, recommended, labelId }:
               tabIndex={isSelected ? 0 : -1}
               onClick={() => onChange(mesh)}
               onKeyDown={(event) => handleKeyDown(event, index)}
-              className={`relative flex min-w-[92px] flex-col items-start rounded-md border px-3 py-2.5 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fluor-600 ${
+              className={`relative flex min-w-[92px] flex-col items-start rounded border px-3 py-2.5 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 ${
                 isSelected
-                  ? 'border-ink-900 bg-ink-900 text-white'
+                  ? 'border-ink-900 bg-ink-900 text-bone'
                   : 'border-ink-200 bg-white text-ink-700 hover:border-ink-600 hover:bg-ink-50'
               }`}
             >
@@ -101,7 +101,7 @@ export function MeshSelector({ options, value, onChange, recommended, labelId }:
               {isRecommended && (
                 <span
                   className={`absolute -top-2 right-2 rounded-full px-1.5 py-px font-mono text-[9px] tracking-wider uppercase ${
-                    isSelected ? 'bg-fluor-500 text-white' : 'bg-fluor-100 text-fluor-700'
+                    isSelected ? 'bg-sand text-bone' : 'bg-sand/40 text-ink-700'
                   }`}
                 >
                   Typical

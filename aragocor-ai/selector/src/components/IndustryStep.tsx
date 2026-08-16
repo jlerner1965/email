@@ -34,17 +34,17 @@ export function IndustryStep({
             onClick={() => onSelect(industry.id)}
             aria-pressed={isActive}
             style={{ animationDelay: `${index * 45}ms` }}
-            className={`panel-rise group relative flex h-full flex-col items-start rounded-lg border bg-white p-5 text-left transition-[border-color,box-shadow,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fluor-600 ${
+            className={`panel-rise group relative flex h-full flex-col items-start rounded-lg border bg-white p-5 text-left transition-[border-color,box-shadow,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 ${
               isActive
-                ? 'border-fluor-600 shadow-[0_0_0_1px_var(--color-fluor-600),0_8px_24px_-12px_rgba(92,61,145,0.45)]'
-                : 'border-ink-200 hover:-translate-y-0.5 hover:border-ink-600 hover:shadow-[0_10px_28px_-18px_rgba(14,24,35,0.5)]'
+                ? 'border-ink-900 shadow-[0_0_0_1px_#0E3540,0_4px_12px_rgba(14,53,64,0.10),0_12px_32px_rgba(14,53,64,0.08)]'
+                : 'border-ink-200 hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-[0_4px_12px_rgba(14,53,64,0.10),0_12px_32px_rgba(14,53,64,0.08)]'
             }`}
           >
             <span
-              className={`mb-4 flex size-11 items-center justify-center rounded-md transition-colors duration-200 ${
+              className={`mb-4 flex size-12 items-center justify-center rounded-full border-[1.5px] transition-colors duration-200 ${
                 isActive
-                  ? 'bg-fluor-600 text-white'
-                  : 'bg-ink-900 text-silica group-hover:bg-ink-800'
+                  ? 'border-ink-900 bg-ink-900 text-bone'
+                  : 'border-ink-600 bg-transparent text-ink-600 group-hover:border-ink-900 group-hover:text-ink-900'
               }`}
             >
               <Icon id={industry.icon} className="size-6" />
@@ -60,7 +60,7 @@ export function IndustryStep({
 
             <span
               className={`mt-4 flex items-center gap-1.5 font-mono text-[11px] tracking-wider uppercase transition-colors duration-200 ${
-                isActive ? 'text-fluor-600' : 'text-ink-400 group-hover:text-ink-700'
+                isActive ? 'text-ink-600' : 'text-ink-400 group-hover:text-ink-700'
               }`}
             >
               {isActive ? 'Selected' : 'Specify'}

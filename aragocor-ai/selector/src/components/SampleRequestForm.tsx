@@ -163,7 +163,7 @@ export function SampleRequestForm({ onSubmit, gradeCode }: SampleRequestFormProp
         {submitError && (
           <div
             role="alert"
-            className="mt-5 flex items-start gap-2.5 rounded-md border border-hematite-600/40 bg-hematite-100 px-3.5 py-3 text-[13px] text-hematite-600"
+            className="mt-5 flex items-start gap-2.5 rounded border border-hematite-600/40 bg-hematite-100 px-3.5 py-3 text-[13px] text-hematite-600"
           >
             <AlertIcon className="mt-px size-4 shrink-0" />
             <span>{submitError}</span>
@@ -174,13 +174,13 @@ export function SampleRequestForm({ onSubmit, gradeCode }: SampleRequestFormProp
           <button
             type="submit"
             disabled={submitting}
-            className="group inline-flex items-center justify-center gap-2 rounded-md bg-fluor-600 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-fluor-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fluor-600 disabled:cursor-not-allowed disabled:bg-ink-400"
+            className="group inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-ink-900 px-7 text-[15px] font-medium text-bone transition-colors duration-200 hover:bg-ink-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900 disabled:cursor-not-allowed disabled:bg-ink-400"
           >
             {submitting ? (
               <>
                 <span
                   aria-hidden="true"
-                  className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                  className="size-4 animate-spin rounded-full border-2 border-bone/40 border-t-bone"
                 />
                 Dispatching…
               </>

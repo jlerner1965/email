@@ -45,10 +45,10 @@ export const FormField = forwardRef<HTMLInputElement | HTMLTextAreaElement, Form
     const hintId = `${id}-hint`;
     const describedBy = [error ? errorId : null, hint ? hintId : null].filter(Boolean).join(' ');
 
-    const controlClass = `w-full rounded-md border bg-white px-3.5 py-2.5 text-sm text-ink-900 transition-colors duration-200 placeholder:text-ink-300 focus:outline-2 focus:outline-offset-0 disabled:cursor-not-allowed disabled:bg-ink-50 disabled:text-ink-400 ${
+    const controlClass = `w-full rounded border bg-white px-3.5 py-2.5 text-sm text-ink-900 transition-colors duration-200 placeholder:text-ink-300 focus:outline-2 focus:outline-offset-0 disabled:cursor-not-allowed disabled:bg-ink-50 disabled:text-ink-400 ${
       error
         ? 'border-hematite-600 focus:border-hematite-600 focus:outline-hematite-600'
-        : 'border-ink-200 focus:border-fluor-600 focus:outline-fluor-600'
+        : 'border-ink-200 focus:border-ink-900 focus:outline-ink-900'
     }`;
 
     return (
