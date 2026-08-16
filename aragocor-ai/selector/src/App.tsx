@@ -2,30 +2,44 @@
  * itself is <MineralSelector/>; everything around it is stage dressing
  * showing how it lands on aragocorminerals.com.
  *
- * Lead capture is wired through createDispatcher when an endpoint is
- * configured (see .env.example). Without one, the widget falls back to
- * its simulated dispatch so the page stays demoable. */
+ * Lead capture resolves through resolveRfqConfig: build-time env when
+ * set, otherwise the deploy's own rfq-config.json (editable in the
+ * repo, no dashboard needed). With neither, submits simulate so the
+ * page stays demoable. A submit awaits the resolution, so a buyer who
+ * races the config fetch still delivers to the real endpoint. */
 
 import { useEffect, useMemo } from 'react';
 import { MineralSelector } from './MineralSelector';
-import { createDispatcher, type DispatchMode } from './lib/dispatch';
+import { resolveRfqConfig } from './lib/config';
+import { createDispatcher, type Dispatcher } from './lib/dispatch';
+import type { SampleRequestPayload } from './types';
 
-function configuredDispatcher() {
-  const endpoint = (import.meta.env.VITE_RFQ_ENDPOINT as string | undefined)?.trim();
-  if (!endpoint) return null;
-  const rawMode = (import.meta.env.VITE_RFQ_MODE as string | undefined)?.trim();
-  const mode: DispatchMode = rawMode === 'netlify' ? 'netlify' : 'json';
-  return createDispatcher({ endpoint, mode });
+async function simulateDispatch(): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, 900));
+}
+
+function makeLeadPipeline() {
+  const dispatcherPromise: Promise<Dispatcher | null> = resolveRfqConfig().then((config) =>
+    config ? createDispatcher(config) : null,
+  );
+  return {
+    dispatcherPromise,
+    async submit(payload: SampleRequestPayload): Promise<void> {
+      const dispatcher = await dispatcherPromise;
+      if (dispatcher) await dispatcher.submit(payload);
+      else await simulateDispatch();
+    },
+  };
 }
 
 export default function App() {
-  const dispatcher = useMemo(configuredDispatcher, []);
+  const pipeline = useMemo(makeLeadPipeline, []);
 
   // Anything a previous session left pending or failed goes out again
   // on load — a flaky connection at the buyer's end can't cost a lead.
   useEffect(() => {
-    void dispatcher?.flushQueue();
-  }, [dispatcher]);
+    void pipeline.dispatcherPromise.then((dispatcher) => dispatcher?.flushQueue());
+  }, [pipeline]);
 
   return (
     <main className="min-h-screen bg-silica">
@@ -47,7 +61,7 @@ export default function App() {
 
       <section className="px-5 pb-20">
         <MineralSelector
-          {...(dispatcher ? { onSubmit: dispatcher.submit } : {})}
+          onSubmit={pipeline.submit}
           onStepChange={(index, id) => {
             // Analytics hook: wire to your tracker of choice.
             if (import.meta.env.DEV) console.info(`[selector] step ${index + 1}: ${id}`);
