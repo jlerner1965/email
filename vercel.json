@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd aragocor-ai/selector && npm ci",
+  "buildCommand": "cd aragocor-ai/selector && npm run build && cd dist && mkdir -p ai && cp -r ../../css ../../js ../../embed ../../index.html ai/",
+  "outputDirectory": "aragocor-ai/selector/dist"
+}
