@@ -53,6 +53,9 @@ export interface Dispatcher {
 export const FORM_NAME = 'aragocor-sample-kit';
 const STORAGE_KEY = 'aragocor.selector.v1';
 const MAX_TRIES = 5;
+/** Sent records kept as history; older ones are pruned so the queue
+ *  cannot grow without bound in a long-lived browser profile. */
+const MAX_SENT_KEPT = 20;
 
 /* ── the queue ─────────────────────────────────────────────────
    One versioned key, an in-memory fallback when storage is blocked
@@ -191,9 +194,29 @@ export function createDispatcher(config: DispatchConfig): Dispatcher {
   const fetchFn = config.fetchFn ?? ((...args: Parameters<typeof fetch>) => fetch(...args));
   const queue = makeQueue(config.storage);
 
+  /** Tracking IDs with a POST currently in the air. Guards against a
+   *  doubled flushQueue (React StrictMode mounts effects twice) or a
+   *  flush racing a submit sending the same lead twice. */
+  const inFlight = new Set<string>();
+
+  /** Pending and failed records are never dropped — they are owed to
+   *  the desk. Sent records are history, capped at MAX_SENT_KEPT. */
+  function prune(records: QueueRecord[]): QueueRecord[] {
+    let sentSeen = 0;
+    return records.filter((record) => {
+      if (record.status !== 'sent') return true;
+      sentSeen += 1;
+      return sentSeen <= MAX_SENT_KEPT;
+    });
+  }
+
   function update(trackingId: string, patch: Partial<QueueRecord>): void {
     queue.write(
-      queue.read().map((record) => (record.trackingId === trackingId ? { ...record, ...patch } : record)),
+      prune(
+        queue
+          .read()
+          .map((record) => (record.trackingId === trackingId ? { ...record, ...patch } : record)),
+      ),
     );
   }
 
@@ -228,17 +251,23 @@ export function createDispatcher(config: DispatchConfig): Dispatcher {
   }
 
   async function deliver(record: QueueRecord): Promise<{ ok: boolean; error?: string }> {
-    const out = await post(toPayload(record));
-    if (out.ok) {
-      update(record.trackingId, { status: 'sent', error: '', sentAt: new Date().toISOString() });
-    } else {
-      update(record.trackingId, {
-        status: 'failed',
-        error: out.error ?? 'Unknown error',
-        tries: record.tries + 1,
-      });
+    if (inFlight.has(record.trackingId)) return { ok: true }; // already going out
+    inFlight.add(record.trackingId);
+    try {
+      const out = await post(toPayload(record));
+      if (out.ok) {
+        update(record.trackingId, { status: 'sent', error: '', sentAt: new Date().toISOString() });
+      } else {
+        update(record.trackingId, {
+          status: 'failed',
+          error: out.error ?? 'Unknown error',
+          tries: record.tries + 1,
+        });
+      }
+      return out;
+    } finally {
+      inFlight.delete(record.trackingId);
     }
-    return out;
   }
 
   return {
@@ -254,7 +283,9 @@ export function createDispatcher(config: DispatchConfig): Dispatcher {
         tries: existing?.tries ?? 0,
         error: '',
       };
-      queue.write([record, ...queue.read().filter((r) => r.trackingId !== payload.trackingId)]);
+      queue.write(
+        prune([record, ...queue.read().filter((r) => r.trackingId !== payload.trackingId)]),
+      );
 
       // Steps 2 and 3: post, then mark.
       const out = await deliver(record);

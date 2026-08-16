@@ -92,6 +92,9 @@ export function MineralSelector({
   /** One tracking ID per request, held across retries so a failed
    *  attempt and its retry are the same lead, not two. */
   const trackingIdRef = useRef<string | null>(null);
+  /** False until the buyer navigates; keeps the initial render from
+   *  stealing page focus into the widget. */
+  const hasNavigated = useRef(false);
 
   // A pending hand-off must not fire into an unmounted tree.
   useEffect(
@@ -127,12 +130,16 @@ export function MineralSelector({
 
   const goTo = useCallback(
     (next: number) => {
+      // After a successful submit the confirmation view owns the body;
+      // moving the cursor would change the indicator but not the view.
+      if (payload) return;
+      hasNavigated.current = true;
       setDirection(next >= step ? 'forward' : 'back');
       setStep(next);
       setFurthest((previous) => Math.max(previous, next));
       keepInView();
     },
-    [step, keepInView],
+    [step, keepInView, payload],
   );
 
   function handleIndustrySelect(id: IndustryId) {
@@ -238,6 +245,7 @@ export function MineralSelector({
             {step === 0 && (
               <StepPanel
                 key="step-industry"
+                focusOnMount={hasNavigated.current}
                 direction={direction}
                 eyebrow="Step 1 of 3"
                 title="Which industry are you specifying for?"
@@ -255,6 +263,7 @@ export function MineralSelector({
             {step === 1 && industry && (
               <StepPanel
                 key="step-process"
+                focusOnMount={hasNavigated.current}
                 direction={direction}
                 eyebrow={`Step 2 of 3 · ${industry.title}`}
                 title="Process requirement and sizing"
@@ -300,6 +309,7 @@ export function MineralSelector({
             {step === 2 && grade && (
               <StepPanel
                 key="step-sample"
+                focusOnMount={hasNavigated.current}
                 direction={direction}
                 eyebrow="Step 3 of 3 · Tailored grade"
                 title="Your grade, and the sample kit that proves it"

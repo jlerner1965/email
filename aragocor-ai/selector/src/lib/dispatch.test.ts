@@ -201,6 +201,50 @@ describe('createDispatcher.flushQueue', () => {
   });
 });
 
+describe('queue hygiene', () => {
+  it('prunes old sent records but never pending or failed ones', async () => {
+    const storage = fakeStorage();
+    const old: object[] = [];
+    for (let i = 0; i < 25; i++) {
+      old.push({ ...PAYLOAD, trackingId: `RFQ-AGM-6000${i}`, status: 'sent', tries: 0, error: '' });
+    }
+    old.push({ ...PAYLOAD, trackingId: 'RFQ-AGM-700001', status: 'failed', tries: 5, error: 'x' });
+    storage.setItem('aragocor.selector.v1', JSON.stringify(old));
+
+    const fetchFn = vi.fn(async () => okResponse());
+    const dispatcher = createDispatcher({ endpoint: 'https://x.test/f', fetchFn, storage });
+    await dispatcher.submit(PAYLOAD); // triggers a pruned write
+
+    const queue = dispatcher.queue();
+    expect(queue.filter((r) => r.status === 'sent')).toHaveLength(20);
+    // The exhausted failed record survives pruning — it is still owed.
+    expect(queue.some((r) => r.trackingId === 'RFQ-AGM-700001')).toBe(true);
+  });
+
+  it('does not double-send a record two flushes race over', async () => {
+    const storage = fakeStorage();
+    storage.setItem(
+      'aragocor.selector.v1',
+      JSON.stringify([{ ...PAYLOAD, status: 'failed', tries: 1, error: 'HTTP 500' }]),
+    );
+
+    let resolveFetch: (r: Response) => void = () => {};
+    const fetchFn = vi.fn(
+      () => new Promise<Response>((resolve) => (resolveFetch = resolve)),
+    );
+    const dispatcher = createDispatcher({ endpoint: 'https://x.test/f', fetchFn, storage });
+
+    // Two flushes in flight at once — StrictMode's double effect.
+    const first = dispatcher.flushQueue();
+    const second = dispatcher.flushQueue();
+    resolveFetch(okResponse());
+    await Promise.all([first, second]);
+
+    expect(fetchFn).toHaveBeenCalledTimes(1);
+    expect(dispatcher.queue()[0]?.status).toBe('sent');
+  });
+});
+
 describe('storage resilience', () => {
   it('keeps working in memory when storage throws', async () => {
     const storage: Pick<Storage, 'getItem' | 'setItem'> = {
