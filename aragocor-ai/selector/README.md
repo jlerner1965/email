@@ -43,12 +43,26 @@ src/
 
 ## Lead capture
 
-Set the endpoint in `.env` (see `.env.example`) and `App.tsx` wires it up:
+Two ways to point the widget at an endpoint, resolved in this order:
 
-```bash
-VITE_RFQ_ENDPOINT=https://formspree.io/f/xxxxxxxx   # or your own handler
-VITE_RFQ_MODE=json                                  # json | netlify
-```
+1. **Build-time env** (see `.env.example`) — wins when set:
+
+   ```bash
+   VITE_RFQ_ENDPOINT=https://formspree.io/f/xxxxxxxx   # or your own handler
+   VITE_RFQ_MODE=json                                  # json | netlify
+   ```
+
+2. **`public/rfq-config.json`** — fetched by the deployed page at load,
+   so the endpoint can be changed by editing one file in the repo and
+   pushing. No hosting-dashboard access, no env vars:
+
+   ```json
+   { "endpoint": "https://formspree.io/f/xxxxxxxx", "mode": "json" }
+   ```
+
+A submit awaits the config resolution, so a buyer who beats the config
+fetch still delivers to the real endpoint. A missing or malformed
+config file degrades to simulated dispatch, never a broken page.
 
 Delivery order matches the sourcing desk deliberately:
 
