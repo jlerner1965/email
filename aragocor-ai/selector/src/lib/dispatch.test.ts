@@ -24,6 +24,7 @@ const PAYLOAD: SampleRequestPayload = {
   purity: '97.0 – 98.0% CaCO₃',
   omri: 'not-applicable',
   notes: '',
+  honeypot: '',
 };
 
 /** In-memory stand-in for localStorage. */

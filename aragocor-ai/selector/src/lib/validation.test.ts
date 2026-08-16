@@ -80,7 +80,7 @@ describe('validateShippingAddress', () => {
 
 describe('validateLead', () => {
   it('returns one message per failing field', () => {
-    const errors = validateLead({ company: '', email: 'bad', shippingAddress: '' });
+    const errors = validateLead({ company: '', email: 'bad', shippingAddress: '', website: '' });
     expect(Object.keys(errors).sort()).toEqual(['company', 'email', 'shippingAddress']);
     expect(hasErrors(errors)).toBe(true);
   });
@@ -90,6 +90,7 @@ describe('validateLead', () => {
       company: 'Toledo Glassworks',
       email: 'batch@toledoglassworks.com',
       shippingAddress: '1400 Industrial Pkwy, Toledo, OH 43605, USA',
+      website: '',
     });
     expect(errors).toEqual({});
     expect(hasErrors(errors)).toBe(false);

@@ -82,14 +82,18 @@ export interface TailoredGrade {
   readonly packing: readonly string[];
 }
 
-/** The three fields the lead form collects. */
+/** The three fields the lead form collects, plus the honeypot.
+ *  `website` is never shown to a person — it is the hidden trap field
+ *  bots fill. Validation ignores it; dispatch maps it to the
+ *  endpoint's spam-discard field. */
 export interface LeadDraft {
   company: string;
   email: string;
   shippingAddress: string;
+  website: string;
 }
 
-export type LeadField = keyof LeadDraft;
+export type LeadField = Exclude<keyof LeadDraft, 'website'>;
 
 export type LeadErrors = Partial<Record<LeadField, string>>;
 
@@ -112,4 +116,8 @@ export interface SampleRequestPayload {
   readonly purity: string;
   readonly omri: OmriStatus;
   readonly notes: string;
+  /** Honeypot value. Empty for humans. Mapped on the wire to
+   *  Formspree's `_gotcha` / Netlify's `bot-field`, never sent under
+   *  this name. */
+  readonly honeypot: string;
 }

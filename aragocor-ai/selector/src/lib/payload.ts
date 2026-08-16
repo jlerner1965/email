@@ -46,5 +46,6 @@ export function buildPayload(
     purity: grade.purity,
     omri: grade.omri,
     notes: notes.trim(),
+    honeypot: draft.website.trim(),
   };
 }

@@ -2,5 +2,24 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "cd aragocor-ai/selector && npm ci",
   "buildCommand": "cd aragocor-ai/selector && npm run build && cd dist && mkdir -p ai && cp -r ../../css ../../js ../../embed ../../index.html ai/",
-  "outputDirectory": "aragocor-ai/selector/dist"
+  "outputDirectory": "aragocor-ai/selector/dist",
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/rfq-config.json",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
 }

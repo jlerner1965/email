@@ -20,7 +20,7 @@ interface SampleRequestFormProps {
   readonly gradeCode: string;
 }
 
-const EMPTY_DRAFT: LeadDraft = { company: '', email: '', shippingAddress: '' };
+const EMPTY_DRAFT: LeadDraft = { company: '', email: '', shippingAddress: '', website: '' };
 
 export function SampleRequestForm({ onSubmit, gradeCode }: SampleRequestFormProps) {
   const [draft, setDraft] = useState<LeadDraft>(EMPTY_DRAFT);
@@ -95,6 +95,24 @@ export function SampleRequestForm({ onSubmit, gradeCode }: SampleRequestFormProp
 
   return (
     <form noValidate onSubmit={handleSubmit} className="panel-rise">
+      {/* Honeypot. Off-screen and inert for people (aria-hidden,
+          tabIndex -1); bots auto-filling every field land in it and
+          the endpoint discards the submission silently. */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label htmlFor="lead-website">Company website</label>
+        <input
+          id="lead-website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={draft.website}
+          onChange={(event) =>
+            setDraft((previous) => ({ ...previous, website: event.target.value }))
+          }
+        />
+      </div>
+
       <div className="rounded-lg border border-ink-200 bg-white p-6">
         <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2 border-b border-ink-100 pb-4">
           <div>
@@ -193,7 +211,7 @@ export function SampleRequestForm({ onSubmit, gradeCode }: SampleRequestFormProp
           </button>
 
           <p className="text-[12px] leading-relaxed text-ink-400 sm:max-w-[19rem] sm:text-right">
-            Used only to route and ship this request. No list, no third parties.
+            Used only to route and ship this request — never a mailing list.
           </p>
         </div>
       </div>
