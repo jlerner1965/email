@@ -19,7 +19,7 @@ import { StepIndicator, type StepDefinition } from './components/StepIndicator';
 import { StepPanel, type StepDirection } from './components/StepPanel';
 import { SuccessPanel } from './components/SuccessPanel';
 import { INDUSTRIES, findIndustry, findProcess } from './data/minerals';
-import { defaultMeshFor, deriveGrade } from './lib/grade';
+import { defaultMeshFor, deriveGrade, makeTrackingId } from './lib/grade';
 import { buildPayload } from './lib/payload';
 import type {
   IndustryId,
@@ -89,6 +89,9 @@ export function MineralSelector({
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const handoffTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** One tracking ID per request, held across retries so a failed
+   *  attempt and its retry are the same lead, not two. */
+  const trackingIdRef = useRef<string | null>(null);
 
   // A pending hand-off must not fire into an unmounted tree.
   useEffect(
@@ -182,15 +185,18 @@ export function MineralSelector({
   async function handleSampleSubmit(draft: LeadDraft) {
     if (!grade) throw new Error('The specification is incomplete. Go back and pick a process.');
 
-    const built = buildPayload(draft, grade, notes);
+    trackingIdRef.current ??= makeTrackingId();
+    const built = buildPayload(draft, grade, notes, trackingIdRef.current);
     if (onSubmit) await onSubmit(built);
     else await simulateDispatch();
 
+    trackingIdRef.current = null; // the next request is a new lead
     setPayload(built);
     keepInView();
   }
 
   function handleReset() {
+    trackingIdRef.current = null;
     setPayload(null);
     setIndustryId(null);
     setPendingId(null);
